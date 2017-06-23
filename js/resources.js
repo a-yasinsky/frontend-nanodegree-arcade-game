@@ -106,6 +106,8 @@
         load: load,
         get: get,
         onReady: onReady,
-        isReady: isReady
+        isReady: isReady,
+		colWidth: 101,
+		rowHeight: 83
     };
 })();
