@@ -108,6 +108,8 @@
         onReady: onReady,
         isReady: isReady,
 		colWidth: 101,
-		rowHeight: 83
+		rowHeight: 83,
+		numCols: 5,
+		numRows: 6
     };
 })();

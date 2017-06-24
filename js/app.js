@@ -24,20 +24,49 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function() {
-	this.x = 2 * Resources.colWidth;
-	this.y = 5 * Resources.rowHeight;
+var Player = function(col = 0, row = 0) {
+	this.currentCol = col;
+	this.currentRow = row;
 	this.sprite = 'images/char-boy.png';
+	this.movementObj = {
+		'up': function(){
+			if((this.currentRow - 1) >= 0) this.currentRow--;
+		},
+		'down': function(){
+			if((this.currentRow + 1) < Resources.numRows) this.currentRow++;
+		},
+		'left': function(){
+			if((this.currentCol - 1) >= 0) this.currentCol--;
+		},
+		'right': function(){
+			if((this.currentCol + 1) < Resources.numCols) this.currentCol++;
+		}
+	};
+	
+	this.updateCords = function() {
+		this.x = this.currentCol * Resources.colWidth;
+		this.y = this.currentRow * Resources.rowHeight;
+	};
+	
+	this.updateCords();
 };
 
 Player.prototype = Object.create(Enemy.prototype);
 Player.prototype.constructor = Player;
-Player.prototype.handleInput = function(){};
+Player.prototype.handleInput = function(side){
+	side && function(side) {
+		var newCol,
+		    newRow;
+		this.movementObj[side].call(this);
+		this.updateCords();
+		this.render();
+	}.call(this,side);
+};
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 allEnemies = [];
-player = new Player();
+player = new Player(2,5);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
