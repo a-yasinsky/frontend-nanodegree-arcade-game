@@ -22,11 +22,25 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
 	this.updateCords(dt);
+	this.onChangeCoords();
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+	var deltaY = 15;
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y - deltaY);
+};
+
+Enemy.prototype.onChangeCoords = checkCollision;
+
+function checkCollision() {
+	var deltaX = 25;
+	allEnemies.forEach(function(enemy) {
+		if(enemy.y === player.y && 
+			enemy.x + Resources.colWidth >= player.x + deltaX && 
+			enemy.x <= player.x + deltaX)
+			player.reset();
+	});
 };
 
 // Now write your own player class
@@ -56,6 +70,11 @@ var Player = function(col = 0, row = 0) {
 		this.y = this.currentRow * Resources.rowHeight;
 	};
 	
+	this.reset = function() {
+		this.currentCol = 2;
+		this.currentRow = 5;
+	};
+	
 	this.updateCords();
 };
 
@@ -66,6 +85,7 @@ Player.prototype.handleInput = function(side){
 		this.movementObj[side].call(this);
 	}.call(this,side);
 };
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
