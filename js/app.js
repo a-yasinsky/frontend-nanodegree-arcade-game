@@ -9,7 +9,7 @@ var Enemy = function(x = 0, y = 0, speed = 1) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 	
-	this.updateCords = function(dt) {
+	this.updateCoords = function(dt) {
 		this.x += speed * dt;
 		if(this.x >= Resources.colWidth * Resources.numCols) this.x = 0;
 	};
@@ -21,7 +21,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-	this.updateCords(dt);
+	this.updateCoords(dt);
 	this.onChangeCoords();
 };
 
@@ -31,9 +31,9 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y - deltaY);
 };
 
-Enemy.prototype.onChangeCoords = checkCollision;
+Enemy.prototype.onChangeCoords = checkCollisionAndWin;
 
-function checkCollision() {
+function checkCollisionAndWin() {
 	var deltaX = 25;
 	allEnemies.forEach(function(enemy) {
 		if(enemy.y === player.y && 
@@ -41,6 +41,7 @@ function checkCollision() {
 			enemy.x <= player.x + deltaX)
 			player.reset();
 	});
+	if(player.currentRow == 0) player.reset();
 };
 
 // Now write your own player class
@@ -65,7 +66,7 @@ var Player = function(col = 0, row = 0) {
 		}
 	};
 	
-	this.updateCords = function(dt = 0) {
+	this.updateCoords = function(dt = 0) {
 		this.x = this.currentCol * Resources.colWidth;
 		this.y = this.currentRow * Resources.rowHeight;
 	};
@@ -75,7 +76,7 @@ var Player = function(col = 0, row = 0) {
 		this.currentRow = 5;
 	};
 	
-	this.updateCords();
+	this.updateCoords();
 };
 
 Player.prototype = Object.create(Enemy.prototype);
