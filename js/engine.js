@@ -160,6 +160,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+		game.reset();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -171,7 +172,10 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+		'images/char-cat-girl.png',
+		'images/char-horn-girl.png',
+		'images/char-pink-girl.png'
     ]);
     Resources.onReady(init);
 

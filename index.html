@@ -6,6 +6,74 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+	<div id="player-choose-overlay"></div>
+	<div id="player-choose">
+	    <h2>Choose your character:</h2>
+		<div class="row">
+			<div class="col-50">
+				<label for="radio-boy">
+					<input type="radio" id="radio-boy" name="player" checked value="boy">
+					<img src="images/char-boy.png" alt="boy">
+				</label>
+			</div>
+			<div class="col-50">
+				<label for="radio-cat-girl">
+					<input type="radio" id="radio-cat-girl" name="player" value="cat-girl">
+					<img src="images/char-cat-girl.png" alt="cat girl">
+				</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-50">
+				<label for="radio-horn-girl">
+					<input type="radio" id="radio-horn-girl" name="player" value="horn-girl">
+					<img src="images/char-horn-girl.png" alt="horn girl">
+				</label>
+			</div>
+			<div class="col-50">
+				<label for="radio-pink-girl">
+					<input type="radio" id="radio-pink-girl" name="player" value="pink-girl">
+					<img src="images/char-pink-girl.png" alt="pink girl">
+				</label>
+			</div>
+		</div>
+		<br>
+		<h2>Choose level:</h2>
+		<div class="row">
+			<div class="col-33">
+				<label for="radio-level-easy">
+					<input type="radio" id="radio-level-easy" name="level" checked value="1">
+					Easy
+				</label>
+			</div>
+			<div class="col-33">
+				<label for="radio-level-medium">
+					<input type="radio" id="radio-level-medium" name="level" value="2">
+					Medium
+				</label>
+			</div>
+			<div class="col-33">
+				<label for="radio-level-hard">
+					<input type="radio" id="radio-level-hard" name="level" value="3">
+					Hard
+				</label>
+			</div>
+		</div>
+		<br>
+		<br>
+		<br>
+		<div class="row">
+			<div class="col-100">
+				<button id="startButton">Start</button>
+			</div>
+		</div>
+	</div>
+	<div class="score">
+		<div class="row">
+			<div class="col-50" id="score" align="left">Score: 0</div>
+			<div class="col-50" id="lives" align="right">lives</div>
+		</div>
+	</div>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>

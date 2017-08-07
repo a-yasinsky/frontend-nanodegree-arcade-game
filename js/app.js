@@ -1,3 +1,7 @@
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
 // Enemies our player must avoid
 var Enemy = function(x = 0, y = 0, speed = 1) {
     // Variables applied to each of our instances go here,
@@ -10,7 +14,7 @@ var Enemy = function(x = 0, y = 0, speed = 1) {
     this.sprite = 'images/enemy-bug.png';
 	
 	this.updateCoords = function(dt) {
-		this.x += speed * dt;
+		this.x += this.speed * dt;
 		if(this.x >= Resources.colWidth * Resources.numCols) this.x = 0;
 	};
 };
@@ -48,6 +52,8 @@ function checkCollisionAndWin() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(col = 0, row = 0) {
+	this.x = 0;
+	this.y = 0;
 	this.currentCol = col;
 	this.currentRow = row;
 	this.sprite = 'images/char-boy.png';
@@ -82,16 +88,71 @@ var Player = function(col = 0, row = 0) {
 Player.prototype = Object.create(Enemy.prototype);
 Player.prototype.constructor = Player;
 Player.prototype.handleInput = function(side){
-	side && function(side) {
+	game.canMove() && side && function(side) {
 		this.movementObj[side].call(this);
 	}.call(this,side);
+};
+
+var Game = function(global) {
+	var settings = {
+		level: 1,
+		character: "boy",
+		moveIsAvailable: false
+	};
+	
+	var score = 0;
+	
+	var lives = 3;
+	
+	function renderScoreLives() {
+		document.getElementById('score').innerHTML = ["Score:",score].join(" ");
+		livesHTML = "";
+		for (var i = 0; i < lives; i++) livesHTML += '<img src="images/Heart.png" class="heart" alt="heart">';
+		document.getElementById('lives').innerHTML = livesHTML;
+	}
+	
+	this.init = function() {
+		global.allEnemies = [new Enemy(0, 1 * Resources.rowHeight, 50)];
+		global.player = new Player(2,5);
+	};
+	
+	this.reset = function() {
+		document.getElementById('player-choose').style.display = 'block';
+		document.getElementById('player-choose-overlay').style.display = 'block';
+		settings.moveIsAvailable = false;
+		score = 0;
+		lives = 3;
+		renderScoreLives();
+	};
+	
+	this.canMove = function () {
+		return settings.moveIsAvailable;
+	};
+	
+	this.start = function (playerImage, level) {
+		var enemiesSpeed = 50 * level;
+		var enemiesAmount = 2 * level;
+		var currentEnemiesAmount = allEnemies.length;
+		var enemyNewCoords = { x:0, y:0 };
+		var newSprite = ['images/char-',playerImage,'.png'].join("");
+		player.sprite = newSprite;
+		for(var i = 0; i < currentEnemiesAmount; i++) {
+			allEnemies[i].speed = enemiesSpeed;
+		}
+		for(i = currentEnemiesAmount; i < enemiesAmount; i++) {
+			enemyNewCoords.x = getRandomInt(1,500);
+			enemyNewCoords.y = getRandomInt(1,4) * Resources.rowHeight;
+			allEnemies.push(new Enemy(enemyNewCoords.x, enemyNewCoords.y , getRandomInt(50,enemiesSpeed)));
+		}
+		settings.moveIsAvailable = true;
+	};
 };
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-allEnemies = [new Enemy(0, 1 * Resources.rowHeight, 50)];
-player = new Player(2,5);
+game = new Game(this);
+game.init();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -104,4 +165,13 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
+});
+
+startButton.addEventListener('click', function(e) {
+	document.getElementById('player-choose').style.display = 'none';
+	document.getElementById('player-choose-overlay').style.display = 'none';
+	game.start(
+			   document.querySelector('input[name="player"]:checked').value,
+			   document.querySelector('input[name="level"]:checked').value
+			  );
 });

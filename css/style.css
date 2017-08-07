@@ -1,3 +1,95 @@
+header,
+nav,
+footer,
+section,
+article,
+div {
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
     text-align: center;
+}
+
+button {
+	font-size: 1.3em;
+	cursor: pointer;
+}
+
+#player-choose-overlay {
+    background-color: black;
+    opacity: .8;
+	display: none;
+}
+
+#player-choose {
+	color: white;
+	display: none;
+}
+
+#player-choose img {
+	vertical-align: middle;
+	margin-top: -50px;
+}
+
+#player-choose label {
+	cursor: pointer;
+}
+
+#player-choose, #player-choose-overlay {
+    margin: 60px auto;
+    width: 505px;
+    height: 536px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    display: block;
+}
+
+.score {
+	margin: 25px auto;
+    width: 505px;
+	position: absolute;
+	top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#score {
+    color: #FF5722;
+    font-size: 1.3em;
+    margin-top: 10px;
+}
+
+.heart {
+	height: 40px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.col-100 {
+	width: 100%;
+}
+
+.col-50 {
+	width: 50%;
+}
+
+.col-33 {
+	width: 33.3333%;
 }
