@@ -23,12 +23,11 @@ button {
 #player-choose-overlay {
     background-color: black;
     opacity: .8;
-	display: none;
 }
 
-#player-choose {
+#player-choose, 
+#game-over {
 	color: white;
-	display: none;
 }
 
 #player-choose img {
@@ -40,7 +39,9 @@ button {
 	cursor: pointer;
 }
 
-#player-choose, #player-choose-overlay {
+#player-choose, 
+#player-choose-overlay, 
+#game-over {
     margin: 60px auto;
     width: 505px;
     height: 536px;
@@ -51,6 +52,10 @@ button {
     bottom: 0;
     z-index: 1;
     display: block;
+}
+
+#game-over {
+	margin-top: 200px;
 }
 
 .score {

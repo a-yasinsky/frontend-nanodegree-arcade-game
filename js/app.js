@@ -2,6 +2,20 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function generateNewCoords(coordsArray) {
+	var rockNewCoords = { x:0, y:0 };
+	rockNewCoords.x = getRandomInt(0,5);
+	rockNewCoords.y = getRandomInt(1,4);
+	for(var i = 0; i < coordsArray.length; i++) {
+		if(coordsArray[i].getCoords().x === rockNewCoords.x &&
+		   coordsArray[i].getCoords().y === rockNewCoords.y) {
+		       rockNewCoords = generateNewCoords(coordsArray);
+			   return rockNewCoords;
+		   }
+	};
+	return rockNewCoords;
+}
+
 // Enemies our player must avoid
 var Enemy = function(x = 0, y = 0, speed = 1) {
     // Variables applied to each of our instances go here,
@@ -35,17 +49,9 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y - deltaY);
 };
 
-Enemy.prototype.onChangeCoords = checkCollisionAndWin;
-
-function checkCollisionAndWin() {
-	var deltaX = 25;
-	allEnemies.forEach(function(enemy) {
-		if(enemy.y === player.y && 
-			enemy.x + Resources.colWidth >= player.x + deltaX && 
-			enemy.x <= player.x + deltaX)
-			player.reset();
-	});
-	if(player.currentRow == 0) player.reset();
+Enemy.prototype.onChangeCoords = function() {
+	game.checkCaught(this);
+	game.checkWin();
 };
 
 // Now write your own player class
@@ -57,18 +63,34 @@ var Player = function(col = 0, row = 0) {
 	this.currentCol = col;
 	this.currentRow = row;
 	this.sprite = 'images/char-boy.png';
+	
+	function noRocks(newRow, newCol) {
+		return ! allRocks.some(function(element) {
+			return (element.getCoords().x === newCol &&
+			   element.getCoords().y === newRow)
+		});
+	}
+	
 	this.movementObj = {
 		'up': function(){
-			if((this.currentRow - 1) >= 0) this.currentRow--;
+			if((this.currentRow - 1) >= 0 && 
+			    noRocks(this.currentRow - 1, this.currentCol)) 
+				   this.currentRow--;
 		},
 		'down': function(){
-			if((this.currentRow + 1) < Resources.numRows) this.currentRow++;
+			if((this.currentRow + 1) < Resources.numRows && 
+			    noRocks(this.currentRow + 1, this.currentCol)) 
+				   this.currentRow++;
 		},
 		'left': function(){
-			if((this.currentCol - 1) >= 0) this.currentCol--;
+			if((this.currentCol - 1) >= 0 && 
+			    noRocks(this.currentRow, this.currentCol - 1)) 
+				   this.currentCol--;
 		},
 		'right': function(){
-			if((this.currentCol + 1) < Resources.numCols) this.currentCol++;
+			if((this.currentCol + 1) < Resources.numCols && 
+			    noRocks(this.currentRow, this.currentCol + 1)) 
+				   this.currentCol++;
 		}
 	};
 	
@@ -114,11 +136,13 @@ var Game = function(global) {
 	this.init = function() {
 		global.allEnemies = [new Enemy(0, 1 * Resources.rowHeight, 50)];
 		global.player = new Player(2,5);
+		global.allRocks = [];
 	};
 	
 	this.reset = function() {
 		document.getElementById('player-choose').style.display = 'block';
 		document.getElementById('player-choose-overlay').style.display = 'block';
+		document.getElementById('game-over').style.display = 'none';
 		settings.moveIsAvailable = false;
 		score = 0;
 		lives = 3;
@@ -132,20 +156,79 @@ var Game = function(global) {
 	this.start = function (playerImage, level) {
 		var enemiesSpeed = 50 * level;
 		var enemiesAmount = 2 * level;
-		var currentEnemiesAmount = allEnemies.length;
 		var enemyNewCoords = { x:0, y:0 };
 		var newSprite = ['images/char-',playerImage,'.png'].join("");
 		player.sprite = newSprite;
-		for(var i = 0; i < currentEnemiesAmount; i++) {
-			allEnemies[i].speed = enemiesSpeed;
-		}
-		for(i = currentEnemiesAmount; i < enemiesAmount; i++) {
+		allEnemies.length = 0;
+		allRocks.length = 0;
+		for(i = 0; i < enemiesAmount; i++) {
 			enemyNewCoords.x = getRandomInt(1,500);
 			enemyNewCoords.y = getRandomInt(1,4) * Resources.rowHeight;
 			allEnemies.push(new Enemy(enemyNewCoords.x, enemyNewCoords.y , getRandomInt(50,enemiesSpeed)));
 		}
 		settings.moveIsAvailable = true;
 	};
+	
+	function win() {
+		player.reset();
+		score += 100;
+		renderScoreLives();
+		if(score % 100 === 0 && allRocks.length < 15) {
+			var rockNewCoords = generateNewCoords(allRocks);
+			allRocks.push(new Rock(rockNewCoords.x,rockNewCoords.y));
+		}
+	};
+	
+	this.checkWin = function() {
+		if(player.currentRow == 0) win();
+	};
+	
+	function showGameOver() {
+		document.getElementById('player-choose-overlay').style.display = 'block';
+		document.getElementById('game-over').style.display = 'block';
+		settings.moveIsAvailable = false;
+	}
+	
+	function caught() {
+		player.reset();
+		lives -= 1;
+		renderScoreLives();
+		if(lives <= 0) showGameOver();
+	};
+	
+	this.checkCaught = function(enemy) {
+		var deltaX = 25;
+		if (!(enemy instanceof Player)) 
+			if(enemy.y === player.y && 
+				enemy.x + Resources.colWidth >= player.x + deltaX && 
+				enemy.x <= player.x + deltaX)
+				caught();
+	};
+};
+
+var Rock = function(col = 0, row = 0) {
+	this.x = 0;
+	this.y = 0;
+	var currentCol = col;
+	var currentRow = row;
+	this.sprite = 'images/Rock.png';
+	
+	this.updateCoords = function() {
+		this.x = currentCol * Resources.colWidth;
+		this.y = currentRow * Resources.rowHeight;
+	};
+	
+	this.getCoords = function() {
+		return { x: currentCol, y: currentRow};
+	}
+	
+	this.updateCoords();
+}
+
+// Draw the rock on the screen, required method for game
+Rock.prototype.render = function() {
+	var deltaY = 20;
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y - deltaY);
 };
 
 // Now instantiate your objects.
@@ -174,4 +257,8 @@ startButton.addEventListener('click', function(e) {
 			   document.querySelector('input[name="player"]:checked').value,
 			   document.querySelector('input[name="level"]:checked').value
 			  );
+});
+
+restartButton.addEventListener('click', function(e) {
+	game.reset();
 });
