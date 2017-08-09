@@ -94,6 +94,14 @@ var Player = function(col = 0, row = 0) {
 		}
 	};
 	
+	this.checkGem = function() {
+		if(gem.getCoords().x === this.currentCol && 
+		   gem.getCoords().y === this.currentRow){
+			   game.findGem();
+			   gem.reset();
+		   }
+	}
+	
 	this.updateCoords = function(dt = 0) {
 		this.x = this.currentCol * Resources.colWidth;
 		this.y = this.currentRow * Resources.rowHeight;
@@ -112,6 +120,7 @@ Player.prototype.constructor = Player;
 Player.prototype.handleInput = function(side){
 	game.canMove() && side && function(side) {
 		this.movementObj[side].call(this);
+		this.checkGem();
 	}.call(this,side);
 };
 
@@ -137,6 +146,7 @@ var Game = function(global) {
 		global.allEnemies = [new Enemy(0, 1 * Resources.rowHeight, 50)];
 		global.player = new Player(2,5);
 		global.allRocks = [];
+		global.gem = new Gem();
 	};
 	
 	this.reset = function() {
@@ -161,6 +171,7 @@ var Game = function(global) {
 		player.sprite = newSprite;
 		allEnemies.length = 0;
 		allRocks.length = 0;
+		gem.reset();
 		for(i = 0; i < enemiesAmount; i++) {
 			enemyNewCoords.x = getRandomInt(1,500);
 			enemyNewCoords.y = getRandomInt(1,4) * Resources.rowHeight;
@@ -173,7 +184,7 @@ var Game = function(global) {
 		player.reset();
 		score += 100;
 		renderScoreLives();
-		if(score % 100 === 0 && allRocks.length < 15) {
+		if(score % 500 === 0 && allRocks.length < 15) {
 			var rockNewCoords = generateNewCoords(allRocks);
 			allRocks.push(new Rock(rockNewCoords.x,rockNewCoords.y));
 		}
@@ -204,6 +215,11 @@ var Game = function(global) {
 				enemy.x <= player.x + deltaX)
 				caught();
 	};
+	
+	this.findGem = function() {
+		score += 100;
+		renderScoreLives();
+	}
 };
 
 var Rock = function(col = 0, row = 0) {
@@ -231,6 +247,53 @@ Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y - deltaY);
 };
 
+var Gem = function(col = -1, row = -1) {
+	this.x = 0;
+	this.y = 0;
+	var currentCol = col;
+	var currentRow = row;
+	this.sprite = 'images/Gem Green.png';
+	this.allTime = 0;
+	this.delayApear = 12;
+	this.delayDisapear = 18;
+	this.setted = false;
+	
+	this.setCoords = function(col,row) {
+		currentCol = col;
+		currentRow = row;
+		this.updateCoords();
+	}
+	
+	this.updateCoords = function() {
+		this.x = currentCol * Resources.colWidth;
+		this.y = currentRow * Resources.rowHeight;
+	};
+	
+	this.getCoords = function() {
+		return { x: currentCol, y: currentRow};
+	}
+	
+	this.reset = function() {
+		this.setCoords(-1, -1);
+		this.setted = false;
+		this.allTime = 0;
+	}
+	
+	this.updateCoords();
+}
+
+Gem.prototype = Object.create(Rock.prototype);
+Gem.prototype.constructor = Rock;
+Gem.prototype.update = function(dt) {
+	this.allTime += dt;
+	if(this.allTime >= this.delayApear && !this.setted) {
+		this.setCoords(getRandomInt(0,5), getRandomInt(1,4));
+		this.setted = true;
+	}
+	if(this.allTime >= this.delayDisapear && this.setted) {
+		this.reset();
+	}
+}
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player

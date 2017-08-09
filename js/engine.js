@@ -94,6 +94,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+		gem.update(dt);
         player.update();
     }
 
@@ -155,6 +156,8 @@ var Engine = (function(global) {
             if(typeof rock['render'] != 'undefined')
 				rock.render();
         });
+		
+		gem.render();
 
         player.render();
     }
@@ -181,7 +184,8 @@ var Engine = (function(global) {
 		'images/char-cat-girl.png',
 		'images/char-horn-girl.png',
 		'images/char-pink-girl.png',
-		'images/Rock.png'
+		'images/Rock.png',
+		'images/Gem Green.png'
     ]);
     Resources.onReady(init);
 
