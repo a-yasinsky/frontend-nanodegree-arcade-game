@@ -20,28 +20,28 @@ button {
 	cursor: pointer;
 }
 
-#player-choose-overlay {
+.overlay {
     background-color: black;
     opacity: .8;
 }
 
-#player-choose, 
-#game-over {
+.player-choose, 
+.game-over {
 	color: white;
 }
 
-#player-choose img {
+.player-choose img {
 	vertical-align: middle;
 	margin-top: -50px;
 }
 
-#player-choose label {
+.player-choose label {
 	cursor: pointer;
 }
 
-#player-choose, 
-#player-choose-overlay, 
-#game-over {
+.player-choose, 
+.overlay, 
+.game-over {
     margin: 60px auto;
     width: 505px;
     height: 536px;
@@ -54,7 +54,7 @@ button {
     display: block;
 }
 
-#game-over {
+.game-over {
 	margin-top: 200px;
 }
 
@@ -68,10 +68,15 @@ button {
     bottom: 0;
 }
 
-#score {
+.score-digit {
+	text-align: left;
     color: #FF5722;
     font-size: 1.3em;
     margin-top: 10px;
+}
+
+.lives {
+	text-align: right;
 }
 
 .heart {

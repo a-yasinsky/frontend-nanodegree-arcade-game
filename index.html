@@ -6,8 +6,8 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-	<div id="player-choose-overlay"></div>
-	<div id="player-choose">
+	<div id="player-choose-overlay" class="overlay"></div>
+	<div id="player-choose" class="player-choose">
 	    <h2>Choose your character:</h2>
 		<div class="row">
 			<div class="col-50">
@@ -68,7 +68,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="game-over">
+	<div id="game-over" class="game-over">
 		<h2>Game over!</h2>
 		<div class="row">
 			<div class="col-100">
@@ -78,8 +78,8 @@
 	</div>
 	<div class="score">
 		<div class="row">
-			<div class="col-50" id="score" align="left"></div>
-			<div class="col-50" id="lives" align="right"></div>
+			<div class="col-50 score-digit" id="score"></div>
+			<div class="col-50 lives" id="lives"></div>
 		</div>
 	</div>
     <script src="js/resources.js"></script>
