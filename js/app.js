@@ -61,7 +61,6 @@ var Player = function(col = 0, row = 0) {
 	this.currentCol = col;
 	this.currentRow = row;
 	this.sprite = 'images/char-boy.png';
-	
 	// Counts x,y values to drowing
 	this.updateCoords = function(dt = 0) {
 		this.x = this.currentCol * Resources.colWidth;
@@ -205,7 +204,7 @@ var Game = function(global) {
 		document.getElementById('player-choose-overlay').style.display = 'block';
 		document.getElementById('game-over').style.display = 'block';
 		settings.moveIsAvailable = false;
-	}
+	};
 	// The player found a gem
 	this.findGem = function() {
 		this.score += 100;
