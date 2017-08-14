@@ -7,6 +7,9 @@ Frogger Arcade is a variation of the classic Frogger arcade game.
 	* [git clone](https://github.com/a-yasinsky/frontend-nanodegree-arcade-game.git)
 2. Open a browser window and navigate to the index.html file
 
+## Example
+You can try the game [here](https://a-yasinsky.github.io/frontend-nanodegree-arcade-game/)
+
 ## Usage
 1. Select a player
 2. Select a level of the game

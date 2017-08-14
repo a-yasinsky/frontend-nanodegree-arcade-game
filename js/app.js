@@ -15,7 +15,7 @@ function generateNewCoords(coordsArray) {
 		       rockNewCoords = generateNewCoords(coordsArray);
 			   return rockNewCoords;
 		   }
-	};
+	}
 	return rockNewCoords;
 }
 
@@ -71,7 +71,7 @@ var Player = function(col = 0, row = 0) {
 	function noRocks(newRow, newCol) {
 		return ! allRocks.some(function(element) {
 			return (element.getCoords().x === newCol &&
-			   element.getCoords().y === newRow)
+			   element.getCoords().y === newRow);
 		});
 	}
 	// Used to process a pressed key
@@ -104,7 +104,7 @@ var Player = function(col = 0, row = 0) {
 			   game.findGem();
 			   gem.reset();
 		   }
-	}
+	};
 	// Counts x,y values to drowing
 	this.updateCoords = function(dt = 0) {
 		this.x = this.currentCol * Resources.colWidth;
@@ -179,7 +179,7 @@ var Game = function(global) {
 		allEnemies.length = 0;
 		allRocks.length = 0;
 		gem.reset();
-		for(i = 0; i < enemiesAmount; i++) {
+		for(var i = 0; i < enemiesAmount; i++) {
 			enemyNewCoords.x = getRandomInt(1,500);
 			enemyNewCoords.y = getRandomInt(1,4) * Resources.rowHeight;
 			allEnemies.push(new Enemy(enemyNewCoords.x, enemyNewCoords.y , getRandomInt(50,enemiesSpeed)));
@@ -195,7 +195,7 @@ var Game = function(global) {
 			var rockNewCoords = generateNewCoords(allRocks);
 			allRocks.push(new Rock(rockNewCoords.x,rockNewCoords.y));
 		}
-	};
+	}
 	// Cheks if player has reached the finish line
 	this.checkWin = function() {
 		if(player.currentRow == 0) win();
@@ -212,7 +212,7 @@ var Game = function(global) {
 		lives -= 1;
 		renderScoreLives();
 		if(lives <= 0) showGameOver();
-	};
+	}
 	// Checks if the player is caught
 	this.checkCaught = function(enemy) {
 		var deltaX = 25;
@@ -226,7 +226,7 @@ var Game = function(global) {
 	this.findGem = function() {
 		score += 100;
 		renderScoreLives();
-	}
+	};
 };
 // Rocks wich player cant pass throught
 var Rock = function(col = 0, row = 0) {
@@ -243,10 +243,10 @@ var Rock = function(col = 0, row = 0) {
 	// Gets column and row
 	this.getCoords = function() {
 		return { x: currentCol, y: currentRow};
-	}
+	};
 	// Initial coordinates counting
 	this.updateCoords();
-}
+};
 
 // Draw the rock on the screen, required method for game
 Rock.prototype.render = function() {
@@ -271,7 +271,7 @@ var Gem = function(col = -1, row = -1) {
 		currentCol = col;
 		currentRow = row;
 		this.updateCoords();
-	}
+	};
 	// Counts x,y values to drowing
 	this.updateCoords = function() {
 		this.x = currentCol * Resources.colWidth;
@@ -280,16 +280,16 @@ var Gem = function(col = -1, row = -1) {
 	// Return column and row values
 	this.getCoords = function() {
 		return { x: currentCol, y: currentRow};
-	}
+	};
 	// Reset initial values of first gem
 	this.reset = function() {
 		this.setCoords(-1, -1);
 		this.setted = false;
 		this.allTime = 0;
-	}
+	};
 	// Initial coordinates counting
 	this.updateCoords();
-}
+};
 
 // Enemy's methods are inherited
 Gem.prototype = Object.create(Rock.prototype);
@@ -305,7 +305,7 @@ Gem.prototype.update = function(dt) {
 	if(this.allTime >= this.delayDisapear && this.setted) {
 		this.reset();
 	}
-}
+};
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
